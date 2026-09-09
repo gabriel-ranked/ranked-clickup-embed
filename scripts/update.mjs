@@ -73,7 +73,7 @@ async function getPostCounts(taskId) {
 }
 
 function formatSaoPaulo(date) {
-  const parts = new Intl.DateTimeFormat("pt-BR", {
+  const parts = new Intl.DateTimeFormat("es-ES", {
     timeZone: "America/Sao_Paulo",
     day: "numeric",
     month: "short",
