@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrega de Posts — Ranked Music</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #f2f3f7;
+    --surface: #ffffff;
+    --surface-2: #eaecf1;
+    --ink: #1c1e25;
+    --ink-muted: #5c6070;
+    --ink-faint: #9498a6;
+    --border: #e2e4ec;
+    --accent: #c31d5b;
+    --accent-soft: #fbe6ee;
+    --accent-ink: #ffffff;
+    --good: #1c9463;
+    --good-soft: #e3f5ec;
+    --warn: #c97a12;
+    --warn-soft: #fbedd8;
+    --idle: #868b99;
+    --idle-soft: #eceef2;
+    --shadow: 0 1px 2px rgba(20, 22, 30, 0.04), 0 8px 20px -12px rgba(20, 22, 30, 0.12);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16171d;
+      --surface: #1e2028;
+      --surface-2: #262834;
+      --ink: #eceef3;
+      --ink-muted: #a3a7b5;
+      --ink-faint: #6d7180;
+      --border: #33364294;
+      --border: #33364e;
+      --accent: #ef588f;
+      --accent-soft: #3a2130;
+      --accent-ink: #1c0a13;
+      --good: #3fbf8a;
+      --good-soft: #163229;
+      --warn: #e2a13f;
+      --warn-soft: #362a13;
+      --idle: #888d9c;
+      --idle-soft: #262834;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #16171d;
+    --surface: #1e2028;
+    --surface-2: #262834;
+    --ink: #eceef3;
+    --ink-muted: #a3a7b5;
+    --ink-faint: #6d7180;
+    --border: #33364e;
+    --accent: #ef588f;
+    --accent-soft: #3a2130;
+    --accent-ink: #1c0a13;
+    --good: #3fbf8a;
+    --good-soft: #163229;
+    --warn: #e2a13f;
+    --warn-soft: #362a13;
+    --idle: #888d9c;
+    --idle-soft: #262834;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    margin: 0;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 28px 20px 60px;
+  }
+
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 38px);
+    line-height: 1.05;
+    margin: 0;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    color: var(--ink-muted);
+    font-size: 15px;
+    max-width: 62ch;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 14px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-top: 2px;
+  }
+
+  .meta-row a {
+    color: var(--ink-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .meta-row a:hover { color: var(--accent); border-color: var(--accent); }
+
+  .dot { opacity: 0.6; }
+
+  /* ---------- KPI row ---------- */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .kpi .label {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-weight: 500;
+  }
+
+  .kpi .value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    font-size: 27px;
+    letter-spacing: -0.01em;
+  }
+
+  .kpi.accent .value { color: var(--accent); }
+
+  /* ---------- campaign sections ---------- */
+  .campaigns {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .campaign {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .campaign-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+
+  .campaign-title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .campaign-title a {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 15.5px;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .campaign-title a:hover { color: var(--accent); }
+
+  .count-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .pill::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .pill.st-live { color: var(--accent); background: var(--accent-soft); }
+  .pill.st-pending { color: var(--idle); background: var(--idle-soft); }
+  .pill.st-approved { color: var(--warn); background: var(--warn-soft); }
+  .pill.st-final { color: var(--warn); background: var(--warn-soft); }
+  .pill.st-complete { color: var(--good); background: var(--good-soft); }
+  .pill.st-canceled { color: var(--ink-faint); background: var(--surface-2); }
+
+  /* ---------- subtask table ---------- */
+  .table-scroll { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 640px;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-faint);
+    padding: 10px 18px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th.num, td.num { text-align: right; }
+
+  tbody td {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--surface-2); }
+
+  .provider a {
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .provider a:hover { color: var(--accent); }
+
+  td.num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+
+  .progress-cell { min-width: 190px; }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .progress-track {
+    position: relative;
+    flex: 1;
+    height: 7px;
+    border-radius: 4px;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    position: absolute;
+    inset: 0;
+    width: var(--pct, 0%);
+    border-radius: 4px;
+    background: var(--accent);
+  }
+
+  .progress-fill.is-complete { background: var(--good); }
+
+  .progress-pct {
+    font-family: 'IBM Plex Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    width: 3.4em;
+    text-align: right;
+  }
+
+  .empty-row td {
+    padding: 16px 18px;
+    color: var(--ink-faint);
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  /* ---------- footer ---------- */
+  footer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--ink-faint);
+    font-size: 12px;
+    line-height: 1.6;
+    padding-top: 4px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+    padding-top: 16px;
+  }
+
+  footer b { color: var(--ink-muted); font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Ranked Music · Lista “Campaigns”</div>
+    <h1>Entrega de Posts</h1>
+    <p class="subtitle">Vendido (Provider Guaranteed Posts) vs. entregue (Provider Delivered Posts), por provider — campanhas ativas da lista.</p>
+    <div class="meta-row">
+      <span>Atualizado em <b id="updated-at" style="color:var(--ink-muted)">9 de set de 2026, 12:09</b> (horário de São Paulo)</span>
+      <span class="dot">·</span>
+      <span>atualiza automaticamente 1x por dia</span>
+      <span class="dot">·</span>
+      <a href="https://app.clickup.com/30926840/v/li/901705330213" target="_blank" rel="noopener">Ver lista no ClickUp ↗</a>
+    </div>
+  </header>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="campaigns" id="campaigns"></div>
+
+  <footer>
+    <div><b>V1 — só posts.</b> Guaranteed Views / Delivered Views entram numa próxima versão.</div>
+    <div>Mostrando só campanhas com status <b>pending</b>, <b>approved – ready to launch</b>, <b>live</b> ou <b>final report</b>. Campanhas <b>complete</b> ou <b>canceled</b> saem da lista.</div>
+  </footer>
+
+</div>
+
+<script>
+  // ---- dados (snapshot gerado a partir do ClickUp) ----
+  /* DATA_START */
+  var DATA = {
+    generatedAt: "2026-09-09T12:09:54-03:00",
+    campaigns: [
+      {
+        name: "(Duetti) DJ Gimi-O “Hayatim” – Strict Brief",
+        url: "https://app.clickup.com/t/86e30vt54",
+        status: "live",
+        subtasks: [
+          { name: "Ranked Owned Accounts · US", url: "https://app.clickup.com/t/86e33kfe7", status: "pending", guaranteed: 100, delivered: 0 }
+        ]
+      },
+      {
+        name: "(UMLE) Kobe Brray Clipping Phase 2 – Strict Brief",
+        url: "https://app.clickup.com/t/86e2zvdnr",
+        status: "live",
+        subtasks: [
+          { name: "Ranked Owned Accounts · US", url: "https://app.clickup.com/t/86e30tgta", status: "complete", guaranteed: 100, delivered: 0 }
+        ]
+      },
+      {
+        name: "[Myke Towers] CARITA FELIZ – Edits",
+        url: "https://app.clickup.com/t/86e2zu968",
+        status: "final report",
+        subtasks: [
+          { name: "TRV Lyrics · LATAM", url: "https://app.clickup.com/t/86e307fbk", status: "pending", guaranteed: 50, delivered: 0 }
+        ]
+      },
+      {
+        name: "[David Bisbal] Herederos – Edits",
+        url: "https://app.clickup.com/t/86e33xqav",
+        status: "approved - ready to launch",
+        subtasks: []
+      },
+      {
+        name: "(Duetti) AK – Forever [Denial] – Closed Brief",
+        url: "https://app.clickup.com/t/86e2vm5z2",
+        status: "live",
+        subtasks: []
+      },
+      {
+        name: "(Duetti) The Arcadian Wild “Cool To Know You” – Edits",
+        url: "https://app.clickup.com/t/86e2taarn",
+        status: "live",
+        subtasks: []
+      }
+    ]
+  };
+  /* DATA_END */
+
+  var STATUS_META = {
+    "pending": { cls: "st-pending", label: "Pending" },
+    "approved - ready to launch": { cls: "st-approved", label: "Approved" },
+    "live": { cls: "st-live", label: "Live" },
+    "final report": { cls: "st-final", label: "Final report" },
+    "complete": { cls: "st-complete", label: "Complete" },
+    "canceled": { cls: "st-canceled", label: "Canceled" }
+  };
+
+  function pillHtml(status) {
+    var meta = STATUS_META[status] || { cls: "st-pending", label: status };
+    return '<span class="pill ' + meta.cls + '">' + meta.label + '</span>';
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function fmt(n) {
+    return n.toLocaleString("pt-BR");
+  }
+
+  function render(data) {
+    var totalGuaranteed = 0, totalDelivered = 0, subtaskCount = 0;
+
+    var campaignsHtml = data.campaigns.map(function (c) {
+      subtaskCount += c.subtasks.length;
+
+      var rowsHtml;
+      if (c.subtasks.length === 0) {
+        rowsHtml = '<tr class="empty-row"><td colspan="4">Nenhuma subtask de provider criada ainda nesta campanha.</td></tr>';
+      } else {
+        rowsHtml = c.subtasks.map(function (s) {
+          totalGuaranteed += s.guaranteed;
+          totalDelivered += s.delivered;
+          var pct = s.guaranteed > 0 ? Math.min(100, Math.round((s.delivered / s.guaranteed) * 100)) : 0;
+          var complete = s.delivered >= s.guaranteed && s.guaranteed > 0;
+          return (
+            '<tr>' +
+              '<td class="provider"><a href="' + s.url + '" target="_blank" rel="noopener">' + esc(s.name) + '</a></td>' +
+              '<td>' + pillHtml(s.status) + '</td>' +
+              '<td class="num">' + fmt(s.guaranteed) + '</td>' +
+              '<td class="num">' + fmt(s.delivered) + '</td>' +
+              '<td class="progress-cell">' +
+                '<div class="progress-row">' +
+                  '<div class="progress-track"><div class="progress-fill' + (complete ? ' is-complete' : '') + '" style="--pct:' + pct + '%"></div></div>' +
+                  '<span class="progress-pct">' + pct + '%</span>' +
+                '</div>' +
+              '</td>' +
+            '</tr>'
+          );
+        }).join("");
+      }
+
+      return (
+        '<div class="campaign">' +
+          '<div class="campaign-head">' +
+            '<div class="campaign-title">' +
+              '<a href="' + c.url + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
+              pillHtml(c.status) +
+            '</div>' +
+            '<span class="count-tag">' + c.subtasks.length + (c.subtasks.length === 1 ? ' provider' : ' providers') + '</span>' +
+          '</div>' +
+          '<div class="table-scroll">' +
+            '<table>' +
+              '<thead><tr>' +
+                '<th>Provider</th><th>Status</th><th class="num">Vendido</th><th class="num">Entregue</th><th>Progresso</th>' +
+              '</tr></thead>' +
+              '<tbody>' + rowsHtml + '</tbody>' +
+            '</table>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join("");
+
+    document.getElementById("campaigns").innerHTML = campaignsHtml;
+
+    var overallPct = totalGuaranteed > 0 ? Math.round((totalDelivered / totalGuaranteed) * 100) : 0;
+    var kpis = [
+      { label: "Campanhas ativas", value: data.campaigns.length, accent: false },
+      { label: "Posts vendidos", value: fmt(totalGuaranteed), accent: false },
+      { label: "Posts entregues", value: fmt(totalDelivered), accent: false },
+      { label: "% entregue", value: overallPct + "%", accent: true }
+    ];
+    document.getElementById("kpis").innerHTML = kpis.map(function (k) {
+      return '<div class="kpi' + (k.accent ? ' accent' : '') + '"><div class="label">' + k.label + '</div><div class="value">' + k.value + '</div></div>';
+    }).join("");
+  }
+
+  render(DATA);
+</script>
+</body>
+</html>
