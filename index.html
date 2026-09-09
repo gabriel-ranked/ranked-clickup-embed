@@ -374,13 +374,13 @@
   <header>
     <div class="eyebrow">Ranked Music · Lista “Campaigns”</div>
     <h1>Entrega de Posts</h1>
-    <p class="subtitle">Vendido (Provider Guaranteed Posts) vs. entregue (Provider Delivered Posts), por provider — campanhas ativas da lista.</p>
+    <p class="subtitle">Vendido (Provider Guaranteed Posts) vs. entregado (Provider Delivered Posts), por provider — campañas activas de la lista.</p>
     <div class="meta-row">
-      <span>Atualizado em <b id="updated-at" style="color:var(--ink-muted)">9 de set de 2026, 12:09</b> (horário de São Paulo)</span>
+      <span>Actualizado el <b id="updated-at" style="color:var(--ink-muted)">9 de sept de 2026, 12:09</b> (hora de São Paulo)</span>
       <span class="dot">·</span>
-      <span>atualiza automaticamente 1x por dia</span>
+      <span>se actualiza automáticamente 1 vez al día</span>
       <span class="dot">·</span>
-      <a href="https://app.clickup.com/30926840/v/li/901705330213" target="_blank" rel="noopener">Ver lista no ClickUp ↗</a>
+      <a href="https://app.clickup.com/30926840/v/li/901705330213" target="_blank" rel="noopener">Ver lista en ClickUp ↗</a>
     </div>
   </header>
 
@@ -389,8 +389,8 @@
   <div class="campaigns" id="campaigns"></div>
 
   <footer>
-    <div><b>V1 — só posts.</b> Guaranteed Views / Delivered Views entram numa próxima versão.</div>
-    <div>Mostrando só campanhas com status <b>pending</b>, <b>approved – ready to launch</b>, <b>live</b> ou <b>final report</b>. Campanhas <b>complete</b> ou <b>canceled</b> saem da lista.</div>
+    <div><b>V1 — solo posts.</b> Guaranteed Views / Delivered Views entrarán en una próxima versión.</div>
+    <div>Mostrando solo campañas con status <b>pending</b>, <b>approved – ready to launch</b>, <b>live</b> o <b>final report</b>. Las campañas <b>complete</b> o <b>canceled</b> se quitan de la lista.</div>
   </footer>
 
 </div>
@@ -448,12 +448,12 @@
   /* DATA_END */
 
   var STATUS_META = {
-    "pending": { cls: "st-pending", label: "Pending" },
-    "approved - ready to launch": { cls: "st-approved", label: "Approved" },
-    "live": { cls: "st-live", label: "Live" },
-    "final report": { cls: "st-final", label: "Final report" },
-    "complete": { cls: "st-complete", label: "Complete" },
-    "canceled": { cls: "st-canceled", label: "Canceled" }
+    "pending": { cls: "st-pending", label: "Pendiente" },
+    "approved - ready to launch": { cls: "st-approved", label: "Aprobada" },
+    "live": { cls: "st-live", label: "En vivo" },
+    "final report": { cls: "st-final", label: "Informe final" },
+    "complete": { cls: "st-complete", label: "Completa" },
+    "canceled": { cls: "st-canceled", label: "Cancelada" }
   };
 
   function pillHtml(status) {
@@ -466,7 +466,7 @@
   }
 
   function fmt(n) {
-    return n.toLocaleString("pt-BR");
+    return n.toLocaleString("es-ES");
   }
 
   function render(data) {
@@ -477,7 +477,7 @@
 
       var rowsHtml;
       if (c.subtasks.length === 0) {
-        rowsHtml = '<tr class="empty-row"><td colspan="4">Nenhuma subtask de provider criada ainda nesta campanha.</td></tr>';
+        rowsHtml = '<tr class="empty-row"><td colspan="4">Todavía no hay ninguna subtask de provider creada en esta campaña.</td></tr>';
       } else {
         rowsHtml = c.subtasks.map(function (s) {
           totalGuaranteed += s.guaranteed;
@@ -513,7 +513,7 @@
           '<div class="table-scroll">' +
             '<table>' +
               '<thead><tr>' +
-                '<th>Provider</th><th>Status</th><th class="num">Vendido</th><th class="num">Entregue</th><th>Progresso</th>' +
+                '<th>Provider</th><th>Status</th><th class="num">Vendido</th><th class="num">Entregado</th><th>Progreso</th>' +
               '</tr></thead>' +
               '<tbody>' + rowsHtml + '</tbody>' +
             '</table>' +
@@ -526,10 +526,10 @@
 
     var overallPct = totalGuaranteed > 0 ? Math.round((totalDelivered / totalGuaranteed) * 100) : 0;
     var kpis = [
-      { label: "Campanhas ativas", value: data.campaigns.length, accent: false },
+      { label: "Campañas activas", value: data.campaigns.length, accent: false },
       { label: "Posts vendidos", value: fmt(totalGuaranteed), accent: false },
-      { label: "Posts entregues", value: fmt(totalDelivered), accent: false },
-      { label: "% entregue", value: overallPct + "%", accent: true }
+      { label: "Posts entregados", value: fmt(totalDelivered), accent: false },
+      { label: "% entregado", value: overallPct + "%", accent: true }
     ];
     document.getElementById("kpis").innerHTML = kpis.map(function (k) {
       return '<div class="kpi' + (k.accent ? ' accent' : '') + '"><div class="label">' + k.label + '</div><div class="value">' + k.value + '</div></div>';
